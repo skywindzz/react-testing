@@ -2,11 +2,12 @@ import jsdom from 'jsdom';
 import jquery from 'jquery';  // $ is jquery default and it will try to get access to browser, therefore we need to redirect
 import TestUtils from 'react-addons-test-utils';
 import ReactDOM from 'react-dom';
-import { expect } from 'chai';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import reducers from '../src/reducers';
+import chai, { expect } from 'chai';
+import chaiJquery from 'chai-jquery';
 
 //setup testing environment to run like a browser in the commandline
 global.document = jsdom.jsdom('<!doctype html><body></body></html>'); //setting up the fake dom in terminal for jquery to use in your test
@@ -25,8 +26,15 @@ function renderComponent(ComponentClass, props, state) {
 }
 
 //build helper for simulating events
-
+$.fn.simulate = function (eventName, value) {
+  if(value) {
+    this.val(value);
+  }
+  TestUtils.Simulate[eventName](this[0]);
+}
+//To call simulate 
 
 //set up chai-jquery
+chaiJquery(chai, chai.util, $);
 
 export { renderComponent, expect };
